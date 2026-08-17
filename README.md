@@ -1,5 +1,7 @@
 # RunCoach
 
+**Live:** [runcoach-ruby.vercel.app](https://runcoach-ruby.vercel.app) · MCP endpoint `https://runcoach-ruby.vercel.app/mcp`
+
 An MCP server that exposes a runner's own training data — computed training
 load, race-time predictions, generated plans — as tools an LLM can call.
 
@@ -94,6 +96,23 @@ vercel env add SUPABASE_SERVICE_ROLE_KEY
 vercel deploy --prod
 ```
 
+Note that the Vercel entry point (`api/mcp.js`) is plain JavaScript re-exporting
+the compiled handler from `dist/`, rather than TypeScript importing `src/`.
+Vercel compiles a `.ts` function in place but leaves relative import specifiers
+untouched, so a `.ts` specifier survives into the deployed bundle and fails at
+runtime looking for a file that was never shipped.
+
+After deploying, check it end to end with a real MCP client:
+
+```bash
+node --experimental-strip-types scripts/verify-deployment.ts \
+  https://runcoach-ruby.vercel.app/mcp rc_live_...
+```
+
+That connects over the network exactly as Claude would — handshake, tool
+discovery, then a call to each of the five tools — and asserts the answers come
+back grounded rather than merely well-formed.
+
 Then add it in any MCP client:
 
 ```json
@@ -101,7 +120,7 @@ Then add it in any MCP client:
   "mcpServers": {
     "runcoach": {
       "type": "http",
-      "url": "https://<your-deployment>/mcp",
+      "url": "https://runcoach-ruby.vercel.app/mcp",
       "headers": { "Authorization": "Bearer rc_live_..." }
     }
   }

@@ -1,0 +1,10 @@
+node_modules
+dist
+vendor/runman/node_modules
+vendor/runman/packages/core/node_modules
+vendor/runman/packages/core/dist
+vendor/runman/apps
+vendor/runman/api
+vendor/runman/supabase
+vendor/runman/scripts
+.git

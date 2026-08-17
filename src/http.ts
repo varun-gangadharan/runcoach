@@ -17,8 +17,8 @@
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { createServer } from '../src/server.ts';
-import { SupabaseRepository } from '../src/data/supabaseRepository.ts';
+import { createServer } from './server.ts';
+import { SupabaseRepository } from './data/supabaseRepository.ts';
 
 /** `Authorization: Bearer rc_live_…`, or `X-API-Key: rc_live_…`. */
 function extractApiKey(req: IncomingMessage): string | undefined {

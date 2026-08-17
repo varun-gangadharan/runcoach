@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RunCoach — MCP server</title>
+    <meta
+      name="description"
+      content="An MCP server exposing a runner's own computed training data — load, race predictions, plans — as tools an LLM can call."
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101114;
+        --panel: #17181c;
+        --border: #2a2c33;
+        --text: #e8e9ec;
+        --muted: #9a9da6;
+        --accent: #ff5722;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        padding: 3rem 1.25rem 5rem;
+      }
+      main { max-width: 46rem; margin: 0 auto; }
+      h1 { font-size: 1.9rem; margin: 0 0 .35rem; letter-spacing: -0.02em; }
+      h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; letter-spacing: -0.01em; }
+      .tag { color: var(--accent); font-family: var(--mono); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+      p { color: var(--muted); margin: 0 0 1rem; }
+      a { color: var(--accent); }
+      code, pre { font-family: var(--mono); font-size: .85rem; }
+      pre {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        overflow-x: auto;
+        color: var(--text);
+      }
+      table { width: 100%; border-collapse: collapse; margin: 0 0 1rem; }
+      th, td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+      th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+      td:first-child { font-family: var(--mono); font-size: .82rem; white-space: nowrap; color: var(--text); }
+      td:last-child { color: var(--muted); font-size: .92rem; }
+      .note {
+        border-left: 2px solid var(--accent);
+        padding: .25rem 0 .25rem 1rem;
+        margin: 1.5rem 0;
+        color: var(--muted);
+      }
+      footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="tag">Model Context Protocol server</div>
+      <h1>RunCoach</h1>
+      <p>
+        Exposes a runner's own training data — computed training load, race-time predictions,
+        generated plans — as tools an LLM can call. Ask any assistant whether you should back off
+        this week and it will produce plausible coaching advice from nothing. This makes the same
+        question resolve against actual recorded activities, and the answer carries the specific
+        runs it came from.
+      </p>
+
+      <h2>Tools</h2>
+      <table>
+        <thead>
+          <tr><th>Tool</th><th>Answers</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>analyze_training_status</td><td>“How is my training going?” — readiness read from load trend, consistency and volume, with explicit caveats</td></tr>
+          <tr><td>get_training_load</td><td>Fitness (CTL), fatigue (ATL), form (TSB) and acute:chronic ratio over a window</td></tr>
+          <tr><td>predict_race_time</td><td>“What could I run for X?” — with the reference efforts used and the implausible ones excluded</td></tr>
+          <tr><td>get_recent_activities</td><td>Recent runs with pace, heart rate and per-activity computed load</td></tr>
+          <tr><td>generate_training_plan</td><td>A periodised plan from measured volume, or a refusal explaining why one would be unsafe</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Connecting</h2>
+      <p>Authentication is a bearer token — an API key issued from the Runman profile page.</p>
+      <pre>{
+  "mcpServers": {
+    "runcoach": {
+      "type": "http",
+      "url": "https://runcoach-ruby.vercel.app/mcp",
+      "headers": { "Authorization": "Bearer rc_live_..." }
+    }
+  }
+}</pre>
+
+      <div class="note">
+        Every tool returns a confidence and an explanation of how its number was derived, and the
+        server instructs the model to carry both through. A prediction stated without its basis is
+        indistinguishable from a guess.
+      </div>
+
+      <h2>Where the numbers come from</h2>
+      <p>
+        RunCoach reimplements nothing. Every calculation comes from
+        <code>@runman/core</code>, the fixture-tested package that also backs the
+        <a href="https://github.com/varun-gangadharan/runman">Runman</a> web app, so a question asked
+        here and the same question asked in the browser run identical code against identical data.
+      </p>
+
+      <footer>
+        <a href="https://github.com/varun-gangadharan/runcoach">github.com/varun-gangadharan/runcoach</a>
+        · MIT
+      </footer>
+    </main>
+  </body>
+</html>

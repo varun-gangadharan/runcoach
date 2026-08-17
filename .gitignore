@@ -11,3 +11,5 @@ dist/
 
 # Internal planning doc — contains career/portfolio context, not for publication.
 PLAN.md
+.vercel
+.env*
