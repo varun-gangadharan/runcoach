@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# Internal planning doc — contains career/portfolio context, not for publication.
+PLAN.md
