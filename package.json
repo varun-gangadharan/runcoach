@@ -2,20 +2,24 @@
   "name": "runcoach",
   "version": "1.0.0",
   "private": true,
-  "description": "An MCP server exposing a runner's own computed training data — load, race predictions, plans — as tools an LLM can call.",
+  "description": "An MCP server exposing a runner's own computed training data \u2014 load, race predictions, plans \u2014 as tools an LLM can call.",
   "license": "MIT",
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "core:install": "npm --prefix vendor/runman/packages/core install --no-audit --no-fund",
     "core:build": "npm --prefix vendor/runman/packages/core run build",
-    "prebuild": "npm run core:install && npm run core:build",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "pretest": "npm run core:install && npm run core:build",
+    "pretest": "npm run core:build",
     "test": "node --test --experimental-strip-types test/*.test.ts",
     "start": "node dist/stdio.js",
-    "dev": "node --experimental-strip-types src/stdio.ts"
+    "dev": "node --experimental-strip-types src/stdio.ts",
+    "prepare": "npm run core:install && npm run core:build",
+    "pretypecheck": "npm run core:build",
+    "prebuild": "npm run core:build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
