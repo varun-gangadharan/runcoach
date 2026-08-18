@@ -59,10 +59,19 @@ async function main(): Promise<void> {
   console.log(prediction.split('\n').slice(0, 14).join('\n'));
   check('prediction returned a time', /prediction: \d+:\d+/.test(prediction));
   check('prediction names its sources', /Derived from these activities/.test(prediction));
-  check(
-    'the GPS glitch was excluded and reported',
-    /Excluded from consideration/.test(prediction) && /world record/.test(prediction),
-  );
+  // Screening only has something to report if the athlete's history actually
+  // contains an implausible activity — the demo athlete has one by design, a
+  // real one may not. Assert the *reporting contract* rather than the presence
+  // of a defect, so this script validates any deployment rather than only the
+  // demo.
+  if (/Excluded from consideration/.test(prediction)) {
+    check(
+      'excluded activities are reported with a reason',
+      /— .+/.test(prediction.split('Excluded from consideration')[1] ?? ''),
+    );
+  } else {
+    console.log('  skip  no implausible activities in this history, nothing to exclude');
+  }
 
   console.log('\n--- get_training_load ---\n');
   const load = textOf(await client.callTool({ name: 'get_training_load', arguments: { windowDays: 42 } }));
