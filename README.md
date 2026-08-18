@@ -18,7 +18,7 @@ answer carrying the specific runs it came from:
 > three days. Fitness is being maintained rather than built, which is the right
 > place to be between goals and worth changing if you have a race coming.
 >
-> For the half: **1:38:49**, most likely between 1:36:50 and 1:40:48. That's
+> For the half: **1:38:48**, most likely between 1:36:49 and 1:40:47. That's
 > fitted to your own distance/time curve across your 5K (21:30, 8 July), 10K
 > (44:50, 3 June) and half (1:38:48, 29 April) — your fatigue exponent came out
 > at 1.059 against a population average of 1.06, so you hold pace about as well

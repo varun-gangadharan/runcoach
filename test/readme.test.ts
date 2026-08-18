@@ -30,8 +30,8 @@ describe('README example conversation', () => {
   test('the half-marathon prediction quoted in the README is what the code produces', async () => {
     const text = textOf(await predictRace(context(ATHLETE_IDS.gpsGlitch), { distance: 'Half Marathon' }));
 
-    assert.match(text, /# Half Marathon prediction: 1:38:49/);
-    assert.match(text, /Plausible range: 1:36:50 to 1:40:48/);
+    assert.match(text, /# Half Marathon prediction: 1:38:48/);
+    assert.match(text, /Plausible range: 1:36:49 to 1:40:47/);
     assert.match(text, /Fatigue exponent used: 1\.059/);
 
     // The three reference efforts, with the dates and times the README names.

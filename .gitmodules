@@ -2,3 +2,4 @@
 	path = vendor/runman
 	url = https://github.com/varun-gangadharan/runman.git
 	ignore = dirty
+	branch = main
